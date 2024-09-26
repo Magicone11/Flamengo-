@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMENGO Screen Effect</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        #flamengoText {
+            font-size: 5em;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+            color: white;
+            text-shadow: 4px 4px 8px black;
+            z-index: 2;
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="canvas"></canvas>
+    <div id="flamengoText">FLAMENGO</div>
+
+    <script>
+        // Configurações do canvas
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const flamengoText = document.getElementById('flamengoText');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const maxSpots = 500; // Máximo de respingos antes de revelar o texto
+        let spots = 0;
+        const colors = ["#FF0000", "#000000"]; // Vermelho e preto
+
+        // Função para criar respingos aleatórios
+        function createSpot() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
+            const radius = Math.random() * 40 + 10; // Tamanho aleatório para respingos
+            const color = colors[Math.floor(Math.random() * colors.length)]; // Seleciona vermelho ou preto
+            
+            ctx.beginPath();
+            ctx.arc(x, y, radius, 0, Math.PI * 2, false);
+            ctx.fillStyle = color;
+            ctx.fill();
+
+            spots++;
+
+            if (spots >= maxSpots) {
+                showFlamengoText(); // Revela o texto ao final
+            }
+        }
+
+        // Função que exibe o texto "FLAMENGO" ao final
+        function showFlamengoText() {
+            flamengoText.style.display = 'block'; // Exibe o texto
+        }
+
+        // Função que inicia o efeito
+        function startEffect() {
+            const interval = setInterval(() => {
+                createSpot(); // Cria respingos aleatórios
+                
+                if (spots >= maxSpots) {
+                    clearInterval(interval); // Para o efeito após o máximo de respingos
+                }
+            }, 50); // Intervalo de 50ms entre os respingos
+        }
+
+        // Evento de clique para iniciar o efeito
+        canvas.addEventListener('click', () => {
+            if (spots === 0) { // Inicia o efeito apenas uma vez
+                startEffect();
+            }
+        });
+    </script>
+
+</body>
+</html>
